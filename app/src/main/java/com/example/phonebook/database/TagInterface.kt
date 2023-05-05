@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface TagDao {
+interface TagInterface {
     @Query("SELECT * FROM TagDbModel")
     fun getAll(): LiveData<List<TagDbModel>>
 

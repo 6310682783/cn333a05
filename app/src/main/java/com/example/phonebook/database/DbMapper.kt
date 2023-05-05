@@ -6,7 +6,6 @@ import com.example.phonebook.domain.model.NoteModel
 import com.example.phonebook.domain.model.TagModel
 
 class DbMapper {
-    // Create list of NoteModels by pairing each note with a color
     fun mapNotes(
         noteDbModels: List<NoteDbModel>,
         colorDbModels: Map<Long, ColorDbModel>,
@@ -21,7 +20,6 @@ class DbMapper {
         mapNote(it, colorDbModel, tagDbModel,)
     }
 
-    // convert NoteDbModel to NoteModel
     fun mapNote(noteDbModel: NoteDbModel, colorDbModel: ColorDbModel, tagDbModel: TagDbModel): NoteModel {
         val color = mapColor(colorDbModel)
         val tag = mapTag(tagDbModel)
@@ -29,11 +27,9 @@ class DbMapper {
         return with(noteDbModel) { NoteModel(id ,phone, firstname, lastname, title, content, isCheckedOff, color, tag) }
     }
 
-    // convert list of ColorDdModels to list of ColorModels
     fun mapColors(colorDbModels: List<ColorDbModel>): List<ColorModel> =
         colorDbModels.map { mapColor(it) }
 
-    // convert ColorDbModel to ColorModel
     fun mapColor(colorDbModel: ColorDbModel): ColorModel =
         with(colorDbModel) { ColorModel(id, name, hex) }
 
@@ -43,7 +39,6 @@ class DbMapper {
     fun mapTags(tagDbModels: List<TagDbModel>): List<TagModel> =
         tagDbModels.map { mapTag(it) }
 
-    // convert NoteModel back to NoteDbModel
     fun mapDbNote(note: NoteModel): NoteDbModel =
         with(note) {
             val canBeCheckedOff = isCheckedOff != null

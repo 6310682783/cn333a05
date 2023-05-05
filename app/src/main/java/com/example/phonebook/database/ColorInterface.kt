@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface ColorDao {
+interface ColorInterface {
     @Query("SELECT * FROM ColorDbModel")
     fun getAll(): LiveData<List<ColorDbModel>>
 

@@ -10,9 +10,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class Repository(
-    private val noteDao: NoteDao,
-    private val colorDao: ColorDao,
-    private val tagDao: TagDao,
+    private val noteInterface: NoteInterface,
+    private val colorInterface: ColorInterface,
+    private val tagInterface: TagInterface,
     private val dbMapper: DbMapper
 ) {
 
@@ -41,23 +41,23 @@ class Repository(
         GlobalScope.launch {
             // Prepopulate colors
             val colors = ColorDbModel.DEFAULT_COLORS.toTypedArray()
-            val dbColors = colorDao.getAllSync()
+            val dbColors = colorInterface.getAllSync()
             if (dbColors.isNullOrEmpty()) {
-                colorDao.insertAll(*colors)
+                colorInterface.insertAll(*colors)
             }
 
             // Prepopulate notes
             val notes = NoteDbModel.DEFAULT_NOTES.toTypedArray()
-            val dbNotes = noteDao.getAllSync()
+            val dbNotes = noteInterface.getAllSync()
             if (dbNotes.isNullOrEmpty()) {
-                noteDao.insertAll(*notes)
+                noteInterface.insertAll(*notes)
             }
 
             //tag
             val tags = TagDbModel.DEFAULT_TAGS.toTypedArray()
-            val dbTags = tagDao.getAllSync()
+            val dbTags = tagInterface.getAllSync()
             if (dbTags.isNullOrEmpty()) {
-                tagDao.insertAll(*tags)
+                tagInterface.insertAll(*tags)
             }
 
             postInitAction.invoke()
@@ -66,45 +66,45 @@ class Repository(
 
     // get list of working notes or deleted notes
     private fun getAllNotesDependingOnTrashStateSync(inTrash: Boolean): List<NoteModel> {
-        val colorDbModels: Map<Long, ColorDbModel> = colorDao.getAllSync().map { it.id to it }.toMap()
-        val tagDbModels: Map<Long, TagDbModel> = tagDao.getAllSync().map { it.id to it }.toMap()
-        //val tagDbModels: Map<Long, TagDbModel> = tagDao.getAllSync().map { it.id to it }.toMap()
+        val colorDbModels: Map<Long, ColorDbModel> = colorInterface.getAllSync().map { it.id to it }.toMap()
+        val tagDbModels: Map<Long, TagDbModel> = tagInterface.getAllSync().map { it.id to it }.toMap()
+        //val tagDbModels: Map<Long, TagDbModel> = tagInterface.getAllSync().map { it.id to it }.toMap()
         val dbNotes: List<NoteDbModel> =
-            noteDao.getAllSync().filter { it.isInTrash == inTrash }
+            noteInterface.getAllSync().filter { it.isInTrash == inTrash }
         return dbMapper.mapNotes(dbNotes, colorDbModels, tagDbModels)
     }
 
     fun insertNote(note: NoteModel) {
-        noteDao.insert(dbMapper.mapDbNote(note))
+        noteInterface.insert(dbMapper.mapDbNote(note))
         updateNotesLiveData()
     }
 
     fun deleteNotes(noteIds: List<Long>) {
-        noteDao.delete(noteIds)
+        noteInterface.delete(noteIds)
         updateNotesLiveData()
     }
 
     fun moveNoteToTrash(noteId: Long) {
-        val dbNote = noteDao.findByIdSync(noteId)
+        val dbNote = noteInterface.findByIdSync(noteId)
         val newDbNote = dbNote.copy(isInTrash = true)
-        noteDao.insert(newDbNote)
+        noteInterface.insert(newDbNote)
         updateNotesLiveData()
     }
 
     fun restoreNotesFromTrash(noteIds: List<Long>) {
-        val dbNotesInTrash = noteDao.getNotesByIdsSync(noteIds)
+        val dbNotesInTrash = noteInterface.getNotesByIdsSync(noteIds)
         dbNotesInTrash.forEach {
             val newDbNote = it.copy(isInTrash = false)
-            noteDao.insert(newDbNote)
+            noteInterface.insert(newDbNote)
         }
         updateNotesLiveData()
     }
 
     fun getAllColors(): LiveData<List<ColorModel>> =
-        Transformations.map(colorDao.getAll()) { dbMapper.mapColors(it) }
+        Transformations.map(colorInterface.getAll()) { dbMapper.mapColors(it) }
 
     fun getAllTags(): LiveData<List<TagModel>> =
-        Transformations.map(tagDao.getAll()) { dbMapper.mapTags(it) }
+        Transformations.map(tagInterface.getAll()) { dbMapper.mapTags(it) }
 
     private fun updateNotesLiveData() {
         notesNotInTrashLiveData.postValue(getAllNotesDependingOnTrashStateSync(false))

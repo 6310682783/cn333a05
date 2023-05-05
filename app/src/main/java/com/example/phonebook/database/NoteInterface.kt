@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface NoteDao {
+interface NoteInterface {
 
     @Query("SELECT * FROM NoteDbModel")
     fun getAllSync(): List<NoteDbModel>

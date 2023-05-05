@@ -5,9 +5,9 @@ import androidx.room.*
 
 @Database(entities = [NoteDbModel::class, ColorDbModel::class, TagDbModel::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun noteDao(): NoteDao
-    abstract fun colorDao(): ColorDao
-    abstract fun tagDao(): TagDao
+    abstract fun noteDao(): NoteInterface
+    abstract fun colorDao(): ColorInterface
+    abstract fun tagDao(): TagInterface
 
     companion object {
         private const val DATABASE_NAME = "note-maker-database"

@@ -17,7 +17,7 @@ data class TagDbModel(
             TagDbModel(3, "#FFFFFF", "Mobile"),
             TagDbModel(4, "#FFFFFF", "Work"),
             TagDbModel(5, "#FFFFFF", "Friend"),
-            TagDbModel(6, "#FFFFFF", "other"),
+            TagDbModel(6, "#FFFFFF", "Other"),
 
         )
         val DEFAULT_TAG = DEFAULT_TAGS[0]
