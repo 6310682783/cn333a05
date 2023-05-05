@@ -129,14 +129,14 @@ private fun TrashTopAppBar(
                 IconButton(onClick = onRestoreNotesClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_restore_from_trash_24),
-                        contentDescription = "Restore Notes Button",
+                        contentDescription = "Restore Contact Button",
                         tint = MaterialTheme.colors.onPrimary
                     )
                 }
                 IconButton(onClick = onDeleteNotesClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_delete_forever_24),
-                        contentDescription = "Delete Notes Button",
+                        contentDescription = "Delete Contact Button",
                         tint = MaterialTheme.colors.onPrimary
                     )
                 }
@@ -193,13 +193,13 @@ private fun Content(
 }
 
 private fun mapDialogTitle(dialog: Int): String = when (dialog) {
-    RESTORE_NOTES_DIALOG -> "Restore notes"
-    PERMANENTLY_DELETE_DIALOG -> "Delete notes forever"
+    RESTORE_NOTES_DIALOG -> "Restore Contact"
+    PERMANENTLY_DELETE_DIALOG -> "Delete contact forever"
     else -> throw RuntimeException("Dialog not supported: $dialog")
 }
 
 private fun mapDialogText(dialog: Int): String = when (dialog) {
-    RESTORE_NOTES_DIALOG -> "Are you sure you want to restore selected notes?"
-    PERMANENTLY_DELETE_DIALOG -> "Are you sure you want to delete selected notes permanently?"
+    RESTORE_NOTES_DIALOG -> "Do you want to restore selected contact?"
+    PERMANENTLY_DELETE_DIALOG -> "Do you want to delete selected contact permanently?"
     else -> throw RuntimeException("Dialog not supported: $dialog")
 }
